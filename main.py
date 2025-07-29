@@ -928,10 +928,10 @@ def iniciar_jogo():
             pygame.time.delay(250)
 
     if not pular_intro:
-        for _ in range(2):
-            pos = randrange(1, 6)
-            roleta.update_image(f'img/roleta_play_{str(pos)}.png')
-            blit_queda(sair_do_jogo, essentials, jogadores, range(6), Jogador('Zé', pos, 0))
+        pos_aleatorios = random.sample(range(1, 6), 2)
+        for p in pos_aleatorios:
+            roleta.update_image(f'img/roleta_play_{str(p)}.png')
+            blit_queda(sair_do_jogo, essentials, jogadores, range(6), Jogador('Zé', p, 0))
             pygame.display.update()
             start = pygame.time.get_ticks()
             while (pygame.time.get_ticks() - start) < 2000:  # 2 segundos = 2000 ms
