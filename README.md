@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Jogo de PC do Roleta Russa
 Jogo feito em Python do programa Roleta Russa, exibido na Record entre 2002 e 2003.
 
@@ -10,3 +11,7 @@ Não há intenção de infringimento de direitos autorais com este jogo. Todos o
 # Possíveis futuras inclusões
 - Bots
 - Menor tempo de espera (dependendo do feedback)
+=======
+# RosyjskaRuletka
+The code for the Polish version of gameshow Russian Roulette, called Rosyjska Ruletka.
+>>>>>>> f2aad296cf4d85c4fb739597e5cb91e7a1e1d24d
