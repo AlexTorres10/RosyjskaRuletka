@@ -1,17 +1,7 @@
-<<<<<<< HEAD
-# Jogo de PC do Roleta Russa
-Jogo feito em Python do programa Roleta Russa, exibido na Record entre 2002 e 2003.
+# Polish gameshow Rosyjska Ruletka game
+Game in Python for Rosyjska Ruletka, gameshow broadcaster in Polsat from 2002 to 2004.
 
-Não há intenção de infringimento de direitos autorais com este jogo. Todos os direitos reservados à RecordTV e à Sony Television. Este é apenas um jogo criado por um grande fã do programa, sem intenções lucrativas.
+No copyright infringement intended. All rights reserved to Polsat and Sony Television. This game has no profit intentions.
 
-# Melhorias em relação ao programa original
-- Dinheiro arredondado em vez de quebrado (Ninguém mais ganhará R$ 23.898 como a Carla Perez, e sim R$ 23.900)
-- Valores das respostas certas corrigidos pela inflação.
-
-# Possíveis futuras inclusões
-- Bots
-- Menor tempo de espera (dependendo do feedback)
-=======
-# RosyjskaRuletka
-The code for the Polish version of gameshow Russian Roulette, called Rosyjska Ruletka.
->>>>>>> f2aad296cf4d85c4fb739597e5cb91e7a1e1d24d
+# Possible future inclusions
+- Two games in one. One mode for 1st version with Henryk Talar and the other one with Krzysztof Ibisz.
