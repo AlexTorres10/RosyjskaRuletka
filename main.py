@@ -1020,7 +1020,7 @@ def iniciar_jogo():
             if rodada > 1 and rodada < 4:
                 mostrar_frases(['Mamy remis na prowadzeniu!', 
                               'Dlatego musimy zakręcić ruletą, ',
-                              'aby zdecydować, kto zacznie rundę wyzwania!'],
+                              'aby zdecydować, kto zacznie','rundę wyzwania!'],
                               x_inicial=1400, y_inicial=700, tam=60, enter=80, fonte='FreeSansBold')
 
             if rodada == 4:
@@ -1096,7 +1096,7 @@ def iniciar_jogo():
             blit_pergunta(pergunta)
             sounds['question'].play()
             pygame.display.update()
-            if desafiante.tipo != 0:
+            if desafiante.tipo != 0 and rodada < 4:
                 wait_until_enter(6)
 
             if rodada == 4:
@@ -1613,7 +1613,7 @@ def iniciar_jogo():
             pygame.key.stop_text_input()
         pygame.mixer.stop()
         alternativas = [resposta_escrita]
-        if resposta_escrita in list_accepted:
+        if resposta_escrita in list_accepted or resposta_escrita.lower() in list_accepted:
             sounds['true'].play()
             pygame.time.delay(2500)
             sounds['aplausos2'].play()
@@ -1709,7 +1709,6 @@ def iniciar_jogo():
     
     mostrar_frases([premio_final.upper()], x_inicial=1400, y_inicial=640, tam=180, enter=80, fonte='Technology')
     pygame.display.update()
-    wait_until_enter(120)
     # FIM DE JOGO - GRAVA RECORDE
     if finalista.tipo == 0:
         df_recordes = pd.read_json("records.json")
@@ -1723,6 +1722,8 @@ def iniciar_jogo():
     
     for som in sounds.keys():
         sounds[som].stop()
+    
+    wait_until_enter(120)
     return
 
 
@@ -2048,7 +2049,6 @@ def mostra_creditos():
                 if volta_menu.check_click():
                     pygame.mixer.stop()
                     loop_creditos = False
-
 
 
 def mostra_recordes():
