@@ -80,10 +80,10 @@ def round_img(round_number, jogadores):
 
 def comeco_jogo():
     global window
-    fr = ['Vai começar o Roleta Russa!', 'Um erro, um vacilo, e você ', 'pode ir pro buraco.']
+    fr = ['Jeśli zapadnia się nie ','otworzy zostajecie w grze,', 'ale jeśli się otworzy ','tracicie grunt pod stopami!']
     for i in range(len(fr)):
         frase = Texto(fr[i], 'FreeSansBold',
-                      72, 1380, 750 + 80 * i)
+                      60, 1360, 700 + 80 * i)
         frase.show_texto(window, align='center')
 
 
@@ -967,9 +967,10 @@ def iniciar_jogo():
 
     roleta.update_image('img/roleta.png')
     blit_all(sair_do_jogo, essentials, jogadores)
-    pygame.display.update()
     sounds['aplausos1'].play()
-    wait_until_enter(4)
+    if not pular_intro:
+        pygame.display.update()
+        wait_until_enter(4)
 
     for n, i, tipo in zip(df_jogadores['nome'], range(1, 6), df_jogadores['tipo']):
         jogadores.append(Jogador(n, i, tipo))
@@ -992,7 +993,7 @@ def iniciar_jogo():
     blit_all(sair_do_jogo, essentials, jogadores)
     pygame.mixer.stop()
     sounds['open_hole'].play()
-    assim_o(window)
+    assim_o(window, texto='')
     wait_until_enter(3)
 
     blit_all(sair_do_jogo, essentials, jogadores)
