@@ -340,7 +340,7 @@ def jogar_roleta(modo, alav, chances_de_cair=0, jogador_em_risco=Jogador('Zé', 
 
 def para_roleta(modo, alav, eliminado=Jogador('Zé', 1, 0), vermelhos=[0], jogador_em_risco=Jogador('Zé', 1, 0),
                 jog_comeca=Jogador('Zé', 1, 0), jogadores=[]):
-    global window, essentials, sair_do_jogo, sounds
+    global window, essentials, sair_do_jogo, sounds, quedas
     blit_all(sair_do_jogo, essentials, jogadores)
     min_delay, max_delay = 100.0, 1000.0
     total_duration = 10500.0
@@ -379,6 +379,8 @@ def para_roleta(modo, alav, eliminado=Jogador('Zé', 1, 0), vermelhos=[0], jogad
             sounds['fall_1'].play(0)
             jogador_em_risco.eliminar(jogadores)
             blit_queda(sair_do_jogo, essentials, jogadores, vermelhos, jogador_em_risco)
+            jogadores_aux = copy_jogadores(jogadores)
+            quedas.append({'modo': 'normal', 'vermelhos': vermelhos, 'jog_eliminado': jogadores_aux[jogador_em_risco.pos - 1], 'jogadores': jogadores_aux})
             return True
         else:
             sounds['save'].play()
@@ -426,6 +428,8 @@ def para_roleta(modo, alav, eliminado=Jogador('Zé', 1, 0), vermelhos=[0], jogad
         sounds['fall_1'].play(0)
         eliminado.eliminar(jogadores)
         blit_queda(sair_do_jogo, essentials, jogadores, [loc_vermelho], eliminado)
+        jogadores_aux = copy_jogadores(jogadores)
+        quedas.append({'modo': 'carrasco', 'vermelhos': [loc_vermelho], 'jog_eliminado': jogadores_aux[eliminado.pos - 1], 'jogadores': jogadores_aux})
         return eliminado
     elif modo == 'comeco':
         total_duration = 11500.0
@@ -632,7 +636,7 @@ def blit_alternativas(perg, alternativas, final_valor=False):
     blit_pergunta(perg, final_valor)
     for a, i in zip(alternativas, range(len(alternativas))):
         Image('img/option.png', 1245, 480 + 107 * i).draw(window)
-        alternativa = Texto(a, 'Varela', 36, 1315, 486 + 107 * i, cor_contorno=(0,0,0))
+        alternativa = Texto(a, 'Varela', 36, 1315, 483 + 107 * i, cor_contorno=(0,0,0))
         alternativa.show_texto(window, 'topleft')
 
 
@@ -645,7 +649,7 @@ def blit_resposta_escolhida(perg, alternativas, escolhida, final_valor=False):
         if a == escolhida:
             Image('img/chosen_answer.png', 1222, 464 + 107 * i).draw(window)
         Image('img/option.png', 1245, 480 + 107 * i).draw(window)
-        alternativa = Texto(a, 'Varela', 36, 1315, 486 + 107 * i, cor_contorno=(0,0,0))
+        alternativa = Texto(a, 'Varela', 36, 1315, 483 + 107 * i, cor_contorno=(0,0,0))
         alternativa.show_texto(window, 'topleft')
 
 
@@ -661,7 +665,7 @@ def blit_certo_errado(perg, alternativas, escolhida, resposta_certa, final_valor
         elif a == resposta_certa:
             Image('img/right_answer.png', 1222, 464 + 107 * i).draw(window)
         Image('img/option.png', 1245, 480 + 107 * i).draw(window)
-        alternativa = Texto(a, 'Varela', 36, 1315, 486 + 107 * i, cor_contorno=(0,0,0))
+        alternativa = Texto(a, 'Varela', 36, 1315, 483 + 107 * i, cor_contorno=(0,0,0))
         alternativa.show_texto(window, 'topleft')
 
 
@@ -673,7 +677,7 @@ def blit_errado(perg, alternativas, escolhida, final_valor=False):
         if a == escolhida:
             Image('img/wrong_answer.png', 1222, 464 + 107 * i).draw(window)
         Image('img/option.png', 1245, 480 + 107 * i).draw(window)
-        alternativa = Texto(a, 'Varela', 36, 1315, 486 + 107 * i, cor_contorno=(0,0,0))
+        alternativa = Texto(a, 'Varela', 36, 1315, 483 + 107 * i, cor_contorno=(0,0,0))
         alternativa.show_texto(window, 'topleft')
 
 
@@ -682,17 +686,35 @@ def distribute_money(jogadores, dinheiro, ess, pergunta=None, eliminado=None):
     global sair_do_jogo
     global sounds
     sounds['money'].play()
+
     qtd_fatias = 5
-    for _ in range(qtd_fatias):
+    base = dinheiro // qtd_fatias               # parcela fixa por fatia
+    resto = dinheiro - base * qtd_fatias        # o que sobra para a última fatia
+
+    for f in range(qtd_fatias):
+        # Na última fatia, adiciona o 'resto' de uma vez
+        incremento = base + (resto if f == qtd_fatias - 1 else 0)
+
         for pl in jogadores:
             if not pl.eliminado:
-                pl.dinheiro += (dinheiro // qtd_fatias)
+                pl.dinheiro += incremento
+
+        if f == qtd_fatias - 1:
+            for pl in jogadores:
+                if not pl.eliminado:
+                    r = pl.dinheiro % 10
+                    if r in (8, 9):
+                        pl.dinheiro += (10 - r)
+
+        # Blits e overlay opcionais
         if eliminado:
             blit_queda(sair_do_jogo, ess, jogadores, [eliminado.pos], eliminado)
         else:
             blit_all(sair_do_jogo, ess, jogadores)
+
         if pergunta:
             blit_pergunta(pergunta)
+
         pygame.time.delay(200)
         pygame.display.update()
 
@@ -844,8 +866,35 @@ def mostrar_frases_controlado(frase, x_inicial=1465,y_inicial=60, tam_fonte=72, 
     pygame.display.update()
 
 
+def mostra_quedas():
+    global sair_do_jogo
+    global essentials
+    global quedas
+    global window
+
+    # quedas.append({'modo': 'carrasco', 'vermelhos': [loc_vermelho], 'jog_eliminado': jogadores_aux[eliminado.pos - 1], 'jogadores': jogadores_aux})
+    sounds['final_round'].play()
+    if quedas[0]['modo'] == 'normal':
+        essentials[0].update_image('img/roleta_' + str(quedas[0]['jog_eliminado'].pos) + '.png')
+    else:
+        essentials[0].update_image('img/roleta.png')
+
+    for q in quedas:
+        if q['modo'] == 'normal':
+            essentials[0].update_image('img/roleta_play_' + str(q['jog_eliminado'].pos) + '.png')
+        else:
+            essentials[0].update_image('img/roleta_play.png')
+            
+        blit_queda(sair_do_jogo, essentials, q['jogadores'], q['vermelhos'], q['jog_eliminado'])
+        pygame.display.update()
+        pygame.time.delay(2250)
+    pygame.time.delay(1000)
+    essentials[0].update_image("img/roleta_inicio.png")
+
+
 def iniciar_jogo():
-    global window, essentials, sair_do_jogo, df_perguntas, img_pergunta, sounds
+    global window, essentials, sair_do_jogo, df_perguntas, img_pergunta, sounds, quedas
+    quedas = []
     for som in sounds.keys():
         sounds[som].stop()
     window.fill('black')
@@ -1113,8 +1162,7 @@ def iniciar_jogo():
                 if desafiante.tipo == 0:
                     escolhido = passa_pra_quem(get_escolhas(jogadores, desafiante), sair_do_jogo)
                 else:
-                    wait_time = uniform(3, 10)
-                    wait_until_enter(wait_time)
+                    wait_until_enter(3)
 
                     escolhido = desafiante.bot_escolhe(get_escolhas(jogadores, desafiante), get_leader(jogadores),
                                                     nao_respondeu, nao_respondeu_nunca, rodada)
@@ -1140,8 +1188,9 @@ def iniciar_jogo():
             start = pygame.time.get_ticks()
             # PASSOU PARA ALGUÉM — Mostra alternativas
             loop_jogo = True
-            wait_pc = 9000
-            time_limit = 15000 if escolhido.tipo == 0 else wait_pc
+            wait_pc = 2 + rodada if rodada < 4 else 10
+            wait_pc = 2 + rodada
+            time_limit = 15 if escolhido.tipo == 0 else wait_pc
             sounds['answers'].play()
             while loop_jogo:
                 blit_all(sair_do_jogo, essentials, jogadores)
@@ -1159,8 +1208,8 @@ def iniciar_jogo():
                             loop_jogo = False
                         if ev.key == pygame.K_F1:
                             time_limit = time_limit * 10
-                time = pygame.time.get_ticks() - start
-                if time > time_limit:  # Espera 15 segundos para contar o tempo
+                time = (pygame.time.get_ticks() - start) / 1000
+                if time > time_limit:
                     loop_jogo = False
             img_pergunta.update_image('img/pergunta.png')
             pygame.display.update()
@@ -1410,10 +1459,7 @@ def iniciar_jogo():
             if lider is not None:
                 lider.change_pos(lider.pos)
             espolios = int(eliminado.dinheiro // (5 - rodada))
-            if espolios > 0 and rodada < 4:
-                distribute_money(jogadores, espolios, essentials, eliminado=eliminado)
-            elif espolios > 0 and rodada == 4:
-                get_leader(jogadores).pega_dinheiro_do_outro(eliminado, window, sair_do_jogo, essentials, jogadores)
+            distribute_money(jogadores, espolios, essentials, eliminado=eliminado)
             
             sounds['before_mex_open'].play()
         wait_until_enter(10)
@@ -1423,7 +1469,8 @@ def iniciar_jogo():
     rodada = 5
     finalista = get_leader(jogadores)  # O líder é logicamente o finalista!
     finalista.move_center()
-    sounds['open_round'].play()
+    mostra_quedas()
+    # sounds['open_round'].play()
     round_img(rodada, jogadores)
 
     
@@ -2180,4 +2227,5 @@ for som in sounds.keys():
     sounds[som].set_volume(vol)
 pygame.mixer.music.set_volume(vol)
 main_loop = True
+quedas = []
 menu_principal()
