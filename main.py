@@ -739,8 +739,7 @@ def seleciona_pergunta(rodada):
         pos_pergunta = random.choice(list_index)
         df_aux = df.loc[pos_pergunta]
         pergunta = df_aux['question']
-        alternativas = [df_aux['right'], df_aux['alt1'], df_aux['alt2'], df_aux['alt3'], df_aux['alt4']]
-        alternativas = [alt for alt in alternativas if alt != '-']
+        alternativas = [df_aux['right'], df_aux['alt1'], df_aux['alt2'], df_aux['alt3'], df_aux['alt4']][:rodada+1]
         emb = str(df_aux['shuffle'])
         if emb.isdigit():
             alt_aux = alternativas.copy()
@@ -1459,7 +1458,8 @@ def iniciar_jogo():
             if lider is not None:
                 lider.change_pos(lider.pos)
             espolios = int(eliminado.dinheiro // (5 - rodada))
-            distribute_money(jogadores, espolios, essentials, eliminado=eliminado)
+            if espolios > 0:
+                distribute_money(jogadores, espolios, essentials, eliminado=eliminado)
             
             sounds['before_mex_open'].play()
         wait_until_enter(10)
@@ -1489,11 +1489,12 @@ def iniciar_jogo():
         if seg > 5 and finalista.tipo != 0:
             esperando_enter = False
         roleta.update_image(f'img/roleta_play_{str(loc_vermelho[0])}.png')
-        blit_vermelho(sair_do_jogo, essentials, jogadores, loc_vermelho, texto_final='Na rodada final, você terá que acertar perguntas sem alternativas. A primeira vale 5.000 (com 3 chances de cair), '
-            'a segunda 25.000 (com 4 chances de cair), e a terceira 100.000 (com 5 chances de cair). '
-            'Antes de cada pergunta, você deverá jogar a roleta e escolher uma das zonas de risco. '
-            'Se errar, os buracos abrem, e se você cair, leva apenas o dinheiro acumulado das rodadas anteriores. '
-            'Se acertar, pode continuar rumo aos 100.000!')
+        blit_vermelho(sair_do_jogo, essentials, jogadores, loc_vermelho, 
+                      texto_final='W rundzie finałowej będziesz musiał odpowiedzieć na pytania bez wariantów odpowiedzi. '
+            'Pierwsze jest warte 5.000 (z 3 szansami na wpadnięcie), drugie 25.000 (z 4 szansami na wpadnięcie), a trzecie 100.000 (z 5 szansami na wpadnięcie). '
+            'Przed każdym pytaniem musisz zakręcić ruletką i wybrać jedną z klap. '
+            'Jeśli się pomylisz, klapy się otworzą, a jeśli wpadniesz, zabierasz tylko pieniądze zebrane z poprzednich rund. '
+            'Jeśli odpowiesz poprawnie, możesz kontynuować drogę do 100.000!')
         loc_vermelho = [(v + 1) % 6 for v in loc_vermelho]
         pygame.display.update()
 
