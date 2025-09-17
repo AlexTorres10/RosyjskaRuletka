@@ -582,7 +582,7 @@ def blit_pergunta(perg, final_valor=False):
 
     for word in words:
         test_line = f"{current_line} {word}".strip()
-        line_width, _ = pygame.font.Font('fonts/Varela.ttf', int(tam_fonte)).size(test_line)
+        line_width, _ = pygame.font.Font('fonts/VAGRounded.ttf', int(tam_fonte)).size(test_line)
         if line_width <= 680:
             current_line = test_line
         else:
@@ -599,7 +599,7 @@ def blit_pergunta(perg, final_valor=False):
         if 'PYTANIE' in p:
             pergunta = Texto(p, 'FreeSansBold', tam_fonte, 1214, 60 + 65 * i, cor_contorno=(0,0,0))
         else:
-            pergunta = Texto(p, 'Varela', tam_fonte, 1214, 60 + 65 * i, cor_contorno=(0,0,0))
+            pergunta = Texto(p, 'VAGRounded', tam_fonte, 1214, 60 + 65 * i, cor_contorno=(0,0,0))
         pergunta.show_texto(window, 'topleft')
 
 
@@ -636,7 +636,7 @@ def blit_alternativas(perg, alternativas, final_valor=False):
     blit_pergunta(perg, final_valor)
     for a, i in zip(alternativas, range(len(alternativas))):
         Image('img/option.png', 1245, 480 + 107 * i).draw(window)
-        alternativa = Texto(a, 'Varela', 36, 1315, 483 + 107 * i, cor_contorno=(0,0,0))
+        alternativa = Texto(a, 'VAGRounded', 40, 1315, 486 + 107 * i, cor_contorno=(0,0,0))
         alternativa.show_texto(window, 'topleft')
 
 
@@ -649,7 +649,7 @@ def blit_resposta_escolhida(perg, alternativas, escolhida, final_valor=False):
         if a == escolhida:
             Image('img/chosen_answer.png', 1222, 464 + 107 * i).draw(window)
         Image('img/option.png', 1245, 480 + 107 * i).draw(window)
-        alternativa = Texto(a, 'Varela', 36, 1315, 483 + 107 * i, cor_contorno=(0,0,0))
+        alternativa = Texto(a, 'VAGRounded', 40, 1315, 486 + 107 * i, cor_contorno=(0,0,0))
         alternativa.show_texto(window, 'topleft')
 
 
@@ -665,7 +665,7 @@ def blit_certo_errado(perg, alternativas, escolhida, resposta_certa, final_valor
         elif a == resposta_certa:
             Image('img/right_answer.png', 1222, 464 + 107 * i).draw(window)
         Image('img/option.png', 1245, 480 + 107 * i).draw(window)
-        alternativa = Texto(a, 'Varela', 36, 1315, 483 + 107 * i, cor_contorno=(0,0,0))
+        alternativa = Texto(a, 'VAGRounded', 40, 1315, 486 + 107 * i, cor_contorno=(0,0,0))
         alternativa.show_texto(window, 'topleft')
 
 
@@ -677,7 +677,7 @@ def blit_errado(perg, alternativas, escolhida, final_valor=False):
         if a == escolhida:
             Image('img/wrong_answer.png', 1222, 464 + 107 * i).draw(window)
         Image('img/option.png', 1245, 480 + 107 * i).draw(window)
-        alternativa = Texto(a, 'Varela', 36, 1315, 483 + 107 * i, cor_contorno=(0,0,0))
+        alternativa = Texto(a, 'VAGRounded', 40, 1315, 486 + 107 * i, cor_contorno=(0,0,0))
         alternativa.show_texto(window, 'topleft')
 
 
@@ -810,7 +810,7 @@ def wait_until_enter(segundos, mus=''):
                 if ev.key == pygame.K_p:
                     loop_pause = True
                     while loop_pause:
-                        frase = Texto('JOGO PAUSADO', 'Varela', 72, 960, 760, cor=(255, 0, 0))
+                        frase = Texto('JOGO PAUSADO', 'VAGRounded', 72, 960, 760, cor=(255, 0, 0))
                         frase.show_texto_cor(window, align='center', color=(0, 0, 0))
                         pygame.display.update()
                         for ev in pygame.event.get():
