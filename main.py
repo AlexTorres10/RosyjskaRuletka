@@ -1743,10 +1743,7 @@ def iniciar_jogo():
             pygame.display.update()
             wait_until_enter(5)
             blit_queda(sair_do_jogo, essentials, jogadores, vermelhos, finalista, final=True)
-            if not finalista.eliminado and vf == 100000:
-                finalista.dinheiro += 100000
-                etapa += 1
-                sounds['aplausos2'].play()
+            
 
         if finalista.eliminado:
             break
