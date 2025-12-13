@@ -2207,7 +2207,7 @@ creditos = Botao('Twórcy', 1850, 850, cor_contorno=(0,0,0))
 sair = Botao('Wyjście', 1850, 950, cor_contorno=(0,0,0))
 sair_do_jogo = Botao('Wyjście z gry', 10, 10, tam=30, align='topleft')
 volta_menu = Botao('Powrót do menu', 10, 10, tam=30, align='topleft')
-versao_do_jogo = Texto('Wersja 1.0', 'FreeSans', 48, 40, 1000, cor_contorno=(0,0,0))
+versao_do_jogo = Texto('Wersja 1.1', 'FreeSans', 48, 40, 1000, cor_contorno=(0,0,0))
 
 img_pergunta = Image('img/pergunta.png', 0, 0)
 
